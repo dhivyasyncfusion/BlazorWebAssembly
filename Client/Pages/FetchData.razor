@@ -1,0 +1,44 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<button @onclick="Toggle">Toggle grid </button>
+
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (ShowGrid && forecasts != null)
+{
+    <Grid></Grid>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    private bool ShowGrid { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+    }
+
+    private void Toggle()
+    {
+        ShowGrid = !ShowGrid;
+    }
+
+    public class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string? Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}
